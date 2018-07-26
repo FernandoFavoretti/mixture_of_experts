@@ -1,3 +1,21 @@
+def create_lag(df, num_lags):
+    import pandas as pd
+    #cria lag
+    #o lag criado gera espacos vazios na tabela
+    df = pd.concat([df.shift(lag) for lag in range(0,num_lags+1)],axis=1)
+    #apagamos os espacos vazioes
+    df = df.dropna()
+    #damos nomes com inteiros para as colunas possibilitando ordenacao
+    df.columns = [int(lag) for lag in range(0,num_lags+1)]
+    #invertemos a ordem dos nomes
+    df.columns = df.columns[::-1]
+    #invertemos a ordem das colunas
+    df = df[sorted(df.columns.values)]
+    #voltamos as colunas para string para podermos renomear e atribuimos a ultima coluna o nome de y
+    df.columns = df.columns.astype(str)
+    df.columns.values[-1] = 'y'
+    return df
+
 def treino_teste_validacao(X,y, frac_train, frac_test):
     import pandas as pd
     #transforma em DataFrames para realizar a divisao
