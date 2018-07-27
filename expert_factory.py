@@ -30,7 +30,7 @@ class Expert():
         '''
         Retirada do codigo disponibilizado em aula ` dYdYin(:,cont)=(1-Y(:,i)).*Y(:,i);%sigmoid e softamax`
         '''
-        return self.softmax(x) * (1 - self.softmax(x))
+        return  np.multiply((1 - self.softmax(x)),self.softmax(x))
     
     
     def __init__(self,ne,nh,ns,g_h,g_o):
@@ -130,10 +130,6 @@ class Expert():
         for epoch in range(1,max_epoch+1):
             #feedforward
             z1,a1,z2,output = self.feedforward(X)
-            print("===")
-            print(output)
-            print(len(output))
-            print("===")
             #backward
             erro_epoca = self.backpropagation(X,y,z1,a1,z2,output,alpha)
             #gera loss
@@ -160,7 +156,7 @@ class Expert():
                 last_eqm_val = eqm_validacao
                 numero_erro_validacao_subiu += 1
                 if numero_erro_validacao_subiu >= numero_max_erro_val:
-                    print("Treinamento encerrado por aumentos consecutivos no erro de validacao, epocas {}".format(epoch))
+#                     print("Treinamento encerrado por aumentos consecutivos no erro de validacao, epocas {}".format(epoch))
                     #retorna os melhores pesos
                     self.W1 = melhores_pesos['W1']
                     self.b1 = melhores_pesos['b1']
@@ -173,7 +169,7 @@ class Expert():
                         plt.show()
                     return melhores_pesos,all_losses
             
-        print("Treinamento encerrado em {} epocas".format(epoch))
+#         print("Treinamento encerrado em {} epocas".format(epoch))
         if plot:       
             plt.plot(all_losses)
             plt.show()
