@@ -96,7 +96,7 @@ class Expert():
         return z1,a1,z2,output
     
     
-    def backpropagation(self, X,y,z1,a1,z2,output):
+    def backpropagation(self, X,y,z1,a1,z2,output,alpha):
         #Calcula deltas por partes
         erro_epoca = output - y
         delta_output = self.executa_funcao_ativacao(self.gout, output, derivativa=True)
@@ -113,7 +113,7 @@ class Expert():
         return erro_epoca
     
 
-    def train(self, max_epoch, alpha, X, y, X_val, y_val, numero_max_erro_val, plot=False):
+    def train(self, max_epoch, alpha, X, y, X_val, y_val, numero_max_erro_val=10, plot=False):
         #Variaveis de controle
         all_losses = [] #para plot
         numero_erro_validacao_subiu = 0 #acompanhamento do erro de validacao
@@ -130,8 +130,12 @@ class Expert():
         for epoch in range(1,max_epoch+1):
             #feedforward
             z1,a1,z2,output = self.feedforward(X)
+            print("===")
+            print(output)
+            print(len(output))
+            print("===")
             #backward
-            erro_epoca = self.backpropagation(X,y,z1,a1,z2,output)
+            erro_epoca = self.backpropagation(X,y,z1,a1,z2,output,alpha)
             #gera loss
             all_losses.append(self.calcula_loss(erro_epoca))
             
