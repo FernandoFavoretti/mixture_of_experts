@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import numpy as np
 class Expert():
 
@@ -95,9 +94,15 @@ class Expert():
         return z1,a1,z2,output
     
     
-    def backpropagation(self, X,y,z1,a1,z2,output,alpha):
+    def backpropagation(self, X,y,z1,a1,z2,output,alpha,h_tipo,h):
         #Calcula deltas por partes
-        erro_epoca = output - y
+        if h_tipo == 'exp':
+            ns=output.shape[0]
+#             h = np.dot(h,np.ones((ns,1)))
+            e = y - output
+        if h_tipo == 'gat':
+            e = h - output
+        erro_epoca = np.multiply(h,e)
         delta_output = self.executa_funcao_ativacao(self.gout, output, derivativa=True)
         d_z2 = erro_epoca * delta_output
         erro_hidden = d_z2.dot(self.W2.T) * (1/len(X))
@@ -112,7 +117,7 @@ class Expert():
         return erro_epoca
     
 
-    def train(self, max_epoch, alpha, X, y, X_val, y_val, numero_max_erro_val=10, plot=False):
+    def train(self, max_epoch, alpha, X, y, X_val, y_val, numero_max_erro_val=10,h_tipo='exp',h=1,plot=False):
         #Variaveis de controle
         all_losses = [] #para plot
         numero_erro_validacao_subiu = 0 #acompanhamento do erro de validacao
@@ -130,7 +135,7 @@ class Expert():
             #feedforward
             z1,a1,z2,output = self.feedforward(X)
             #backward
-            erro_epoca = self.backpropagation(X,y,z1,a1,z2,output,alpha)
+            erro_epoca = self.backpropagation(X,y,z1,a1,z2,output,alpha,h_tipo,h)
             #gera loss
             all_losses.append(self.calcula_loss(erro_epoca))
             
@@ -155,7 +160,7 @@ class Expert():
                 last_eqm_val = eqm_validacao
                 numero_erro_validacao_subiu += 1
                 if numero_erro_validacao_subiu >= numero_max_erro_val:
-                    #print("Treinamento encerrado por aumentos consecutivos no erro de validacao, epocas {}".format(epoch))
+                    print("Treinamento encerrado por aumentos consecutivos no erro de validacao, epocas {}".format(epoch))
                     #retorna os melhores pesos
                     self.W1 = melhores_pesos['W1']
                     self.b1 = melhores_pesos['b1']
@@ -168,7 +173,7 @@ class Expert():
                         plt.show()
                     return melhores_pesos,all_losses
             
-        #print("Treinamento encerrado em {} epocas".format(epoch))
+        print("Treinamento encerrado em {} epocas".format(epoch))
         if plot:       
             import matplotlib.pyplot as plt
             plt.plot(all_losses)
