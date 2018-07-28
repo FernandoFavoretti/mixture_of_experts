@@ -1,10 +1,9 @@
-import numpy as np
 import matplotlib.pyplot as plt
-
+import numpy as np
 class Expert():
 
     def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
+        return (1.) / (1 + np.exp(-x))
 
     
     def sigmoid_derivativa(self, x):
@@ -156,7 +155,7 @@ class Expert():
                 last_eqm_val = eqm_validacao
                 numero_erro_validacao_subiu += 1
                 if numero_erro_validacao_subiu >= numero_max_erro_val:
-#                     print("Treinamento encerrado por aumentos consecutivos no erro de validacao, epocas {}".format(epoch))
+                    #print("Treinamento encerrado por aumentos consecutivos no erro de validacao, epocas {}".format(epoch))
                     #retorna os melhores pesos
                     self.W1 = melhores_pesos['W1']
                     self.b1 = melhores_pesos['b1']
@@ -169,8 +168,9 @@ class Expert():
                         plt.show()
                     return melhores_pesos,all_losses
             
-#         print("Treinamento encerrado em {} epocas".format(epoch))
+        #print("Treinamento encerrado em {} epocas".format(epoch))
         if plot:       
+            import matplotlib.pyplot as plt
             plt.plot(all_losses)
             plt.show()
         return melhores_pesos,all_losses

@@ -51,3 +51,6 @@ def treino_teste_validacao(X,y, frac_train, frac_test):
     return X_train.as_matrix(),y_train.as_matrix(),\
            X_test.as_matrix(),y_test.as_matrix(),\
            X_val.as_matrix(),y_val.as_matrix()
+
+def normalize_data(df):
+    return (df - df.min())/ (df.max() - df.min())
