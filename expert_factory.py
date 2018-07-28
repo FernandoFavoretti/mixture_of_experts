@@ -31,7 +31,7 @@ class Expert():
         return  np.multiply((1 - self.softmax(x)),self.softmax(x))
     
     
-    def __init__(self,ne,nh,ns,g_h,g_o):
+    def __init__(self,ne,nh,ns,g_h,g_o,max_epoch,alpha):
         '''
         ne = numero de neuronios entradas
         nh = numero neuronios hidden layer
@@ -50,7 +50,8 @@ class Expert():
         self.b2=np.random.uniform(size=(1,ns))
         self.ghidden = g_h
         self.gout = g_o
-        
+        self.max_epoch = max_epoch
+        self.alpha = alpha
         
     def executa_funcao_ativacao(self, tipo, x, derivativa=False):
         if tipo == 'sigmoid':
@@ -101,9 +102,11 @@ class Expert():
             e = y - output
         if h_tipo == 'gat':
             e = h - output
+            
         erro_epoca = np.multiply(h,e)
         delta_output = self.executa_funcao_ativacao(self.gout, output, derivativa=True)
         d_z2 = erro_epoca * delta_output
+        
         erro_hidden = d_z2.dot(self.W2.T) * (1/len(X))
         delta_hidden = self.executa_funcao_ativacao(self.ghidden,z1,derivativa=True)
         d_z1 = erro_hidden * delta_hidden * (1/len(X))
@@ -116,12 +119,13 @@ class Expert():
         return erro_epoca
     
 
-    def train(self, max_epoch, alpha, X, y, X_val, y_val, numero_max_erro_val=10,h_tipo='exp',h=1,plot=False):
+    def train(self, X, y, X_val, y_val, numero_max_erro_val=10,h_tipo='exp',h=1,plot=False):
         #Variaveis de controle
         all_losses = [] #para plot
         numero_erro_validacao_subiu = 0 #acompanhamento do erro de validacao
         last_eqm_val = 99999  #acompanhamento do erro de validacao
-
+        max_epoch = self.max_epoch
+        alpha = self.alpha
         #armazena melhores pesos para retorno posterior
         melhores_pesos = {
             'W1' : self.W1,
