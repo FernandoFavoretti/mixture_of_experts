@@ -98,7 +98,6 @@ class Expert():
         #Calcula deltas por partes
         if h_tipo == 'exp':
             ns=output.shape[0]
-#             h = np.dot(h,np.ones((ns,1)))
             e = y - output
         if h_tipo == 'gat':
             e = h - output
@@ -110,10 +109,10 @@ class Expert():
         d_z1 = erro_hidden * delta_hidden * (1/len(X))
         
         #Atualiza pesos
-        self.W2 -= z1.T.dot(d_z2) * alpha
-        self.b2 -= np.sum(d_z2, axis=0,keepdims=True) * alpha
-        self.W1 -= X.T.dot(d_z1) * alpha
-        self.b1 -= np.sum(d_z1, axis=0,keepdims=True) * alpha
+        self.W2 += z1.T.dot(d_z2) * alpha
+        self.b2 += np.sum(d_z2, axis=0,keepdims=True) * alpha
+        self.W1 += X.T.dot(d_z1) * alpha
+        self.b1 +=np.sum(d_z1, axis=0,keepdims=True) * alpha
         return erro_epoca
     
 
@@ -160,7 +159,7 @@ class Expert():
                 last_eqm_val = eqm_validacao
                 numero_erro_validacao_subiu += 1
                 if numero_erro_validacao_subiu >= numero_max_erro_val:
-                    print("Treinamento encerrado por aumentos consecutivos no erro de validacao, epocas {}".format(epoch))
+#                     print("Treinamento encerrado por aumentos consecutivos no erro de validacao, epocas {}".format(epoch))
                     #retorna os melhores pesos
                     self.W1 = melhores_pesos['W1']
                     self.b1 = melhores_pesos['b1']
@@ -173,7 +172,7 @@ class Expert():
                         plt.show()
                     return melhores_pesos,all_losses
             
-        print("Treinamento encerrado em {} epocas".format(epoch))
+#         print("Treinamento encerrado em {} epocas".format(epoch))
         if plot:       
             import matplotlib.pyplot as plt
             plt.plot(all_losses)
