@@ -88,7 +88,7 @@ gating_network,all_experts = read_serialized_networks()
 saida = np.ravel(output_final(df, gating_network, all_experts))
 #salva saida como arquivo csv
 print("Predicoes salvas em output_mistura.csv")
-pd.DataFrame(saida).to_csv('output_mistura.csv', index=False)
+pd.DataFrame(saida, columns=['Predicoes']).to_csv('output_mistura.csv', index=False)
 #plota resultados
 plt.plot(saida)
 plt.title("Predicoes para arquivo {} com {} lags".format(filename,15))
