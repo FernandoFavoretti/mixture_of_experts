@@ -191,5 +191,3 @@ class Expert():
         self.b2 = melhores_pesos['b2']
         z1,a1,z2,output = self.feedforward(X)
         return output
-
-        
